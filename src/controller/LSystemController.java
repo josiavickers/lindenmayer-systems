@@ -5,6 +5,8 @@ package controller;
 
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import model.LSystemParser;
 import model.PredefinedLSystem;
 import model.TurtleCommand;
@@ -18,70 +20,90 @@ public class LSystemController {
 	public LSystemController(ControlPanel controlPanel, DrawingPanel drawingPanel) {
 		this.controlPanel = controlPanel;
 		this.drawingPanel = drawingPanel;
+		initializeController();
+	}
 
-		// Set default preset and trigger drawing
-		controlPanel.setSelectedPreset(PredefinedLSystem.predefinedLSystems()[0]);
-		onPresetSelected();
+	private void initializeController() {
+		try {
+			if (PredefinedLSystem.predefinedLSystems() == null) {
+				showErrorDialog("No predefined L-Systems available.");
+				throw new IllegalStateException("No predefined L-Systems available.");
+			}
+			// Set default preset and trigger drawing
+			controlPanel.setSelectedPreset(PredefinedLSystem.predefinedLSystems()[0]);
+			onPresetSelected();
 
-		controlPanel.addPresetComboBoxListener(e -> onPresetSelected());
-		controlPanel.addButtonListener(e -> onGenerateClicked());
-		setupEventHandler();
+			controlPanel.addPresetComboBoxListener(e -> onPresetSelected());
+			controlPanel.addButtonListener(e -> onGenerateClicked());
+			setupEventHandler();
+		} catch (Exception e) {
+			showErrorDialog("Error initializing controller: " + e.getMessage());
+		}
 	}
 
 	private void setupEventHandler() {
-		// adding action listener to Iteration Spinner
 		controlPanel.getIterationSpinner().addChangeListener(e -> onGenerateClicked());
-
-		// adding action listener to Angel Spinner
 		controlPanel.getAngleSpinner().addChangeListener(e -> onGenerateClicked());
-
-		// adding action listener to Step Spinner
 		controlPanel.getStepSpinner().addChangeListener(e -> onGenerateClicked());
-
 	}
 
 	private void onPresetSelected() {
-		PredefinedLSystem preset = null;
-		preset = controlPanel.getSelectedPreset();
-		if (preset == null)
-			return;
+		try {
+			PredefinedLSystem preset = controlPanel.getSelectedPreset();
+			
 
-		// Update UI fields with preset values
-		setPreset(preset.getAxiom(), preset.getRules(), preset.getAngle(), preset.getStep(), preset.getIterations());
+			// Update UI fields with preset values
+			setPreset(preset.getAxiom(), preset.getRules(), preset.getAngle(), preset.getStep(),
+					preset.getIterations());
 
-		// Trigger immediate visualization
-		generateAndDraw(preset);
+			generateAndDraw(preset);
+		} catch (Exception e) {
+			showErrorDialog("Error selecting preset: " + e.getMessage());
+		}
+
 	}
 
 	private void onGenerateClicked() {
-		generateAndDraw(null); // Use manual input values
+		try {
+			generateAndDraw(null);
+		} catch (Exception e) {
+			showErrorDialog("Error generating L-System: " + e.getMessage());
+		}
 	}
 
 	private void generateAndDraw(PredefinedLSystem preset) {
-		String axiom = preset != null ? preset.getAxiom() : controlPanel.getAxiom();
-		String rules = preset != null ? preset.getRules() : controlPanel.getRules();
-		double angle = preset != null ? preset.getAngle() : controlPanel.getAngle();
-		int step = preset != null ? preset.getStep() : controlPanel.getStep();
-		int iterations = preset != null ? preset.getIterations() : controlPanel.getIteration();
+		try {
 
-		// Lsystem parser
-		LSystemParser lSystem = new LSystemParser(axiom, rules, iterations);
-		Map<Character, TurtleCommand> commandMap;
+			String axiom = preset != null ? preset.getAxiom() : controlPanel.getAxiom();
+			String rules = preset != null ? preset.getRules() : controlPanel.getRules();
+			double angle = preset != null ? preset.getAngle() : controlPanel.getAngle();
+			int step = preset != null ? preset.getStep() : controlPanel.getStep();
+			int iterations = preset != null ? preset.getIterations() : controlPanel.getIteration();
 
-		if (preset != null) {
-			controlPanel.getCheckbox().setSelected(true);
+			// L-system parser
+			LSystemParser lSystem = new LSystemParser(axiom, rules, iterations);
+			Map<Character, TurtleCommand> commandMap;
+
+			if (preset != null) {
+				controlPanel.getCheckbox().setSelected(true);
+			}
+
+			if (controlPanel.getCheckbox().isSelected()) {
+				commandMap = TurtleCommand.PREDEFINED_COMMANDS;
+			} else {
+				commandMap = lSystem.parseCommands(controlPanel.getCommands());
+			}
+
+			String result = lSystem.generateLSystemString();
+
+			// Update drawing panel
+			updateDrawingPanel(angle, step, commandMap, result);
+		} catch (Exception e) {
+			showErrorDialog("Error generating L-System: " + e.getMessage());
 		}
+	}
 
-		if (controlPanel.getCheckbox().isSelected()) {
-			commandMap = TurtleCommand.PREDEFINED_COMMANDS;
-		} else {
-			// Parse custom commands from the input field
-			commandMap = lSystem.parseCommands(controlPanel.getCommands());
-		}
-
-		String result = lSystem.generateLSystemString();
-
-		// Update drawing panel
+	private void updateDrawingPanel(double angle, int step, Map<Character, TurtleCommand> commandMap, String result) {
 		drawingPanel.setAngle(angle);
 		drawingPanel.setStep(step);
 		drawingPanel.setCommandMap(commandMap);
@@ -94,5 +116,9 @@ public class LSystemController {
 		controlPanel.setAngle(angle);
 		controlPanel.setStep(step);
 		controlPanel.setIterations(iterations);
+	}
+
+	private void showErrorDialog(String message) {
+		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 }
