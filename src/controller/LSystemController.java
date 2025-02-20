@@ -50,7 +50,6 @@ public class LSystemController {
 	private void onPresetSelected() {
 		try {
 			PredefinedLSystem preset = controlPanel.getSelectedPreset();
-			
 
 			// Update UI fields with preset values
 			setPreset(preset.getAxiom(), preset.getRules(), preset.getAngle(), preset.getStep(),
@@ -94,20 +93,20 @@ public class LSystemController {
 				commandMap = lSystem.parseCommands(controlPanel.getCommands());
 			}
 
-			String result = lSystem.generateLSystemString();
+			String lSystemString = lSystem.generateLSystemString();
 
 			// Update drawing panel
-			updateDrawingPanel(angle, step, commandMap, result);
+			updateDrawingPanel(angle, step, commandMap, lSystemString);
 		} catch (Exception e) {
 			showErrorDialog("Error generating L-System: " + e.getMessage());
 		}
 	}
 
-	private void updateDrawingPanel(double angle, int step, Map<Character, TurtleCommand> commandMap, String result) {
+	private void updateDrawingPanel(double angle, int step, Map<Character, TurtleCommand> commandMap, String lSystemString) {
 		drawingPanel.setAngle(angle);
 		drawingPanel.setStep(step);
 		drawingPanel.setCommandMap(commandMap);
-		drawingPanel.setCommands(result);
+		drawingPanel.setLSystemString(lSystemString);
 	}
 
 	private void setPreset(String axiom, String rules, double angle, int step, int iterations) {
