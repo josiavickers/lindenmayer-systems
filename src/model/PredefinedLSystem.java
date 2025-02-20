@@ -9,7 +9,7 @@ public class PredefinedLSystem {
 	private final String rules;
 	private final int iterations;
 	private final int step;
-	private double angle;
+	private final double angle;
 
 	public PredefinedLSystem(String name, String axiom, String rules, double angle, int step, int iterations) {
 		this.name = name;
@@ -46,17 +46,20 @@ public class PredefinedLSystem {
 	}
 
 	// Predefined LSystems
-	// https://paulbourke.net/fractals/lsys/ -> source
 	public static PredefinedLSystem[] predefinedLSystems() {
-		return new PredefinedLSystem[] { new PredefinedLSystem("Quadratic Snowflake", "F-F-F-F", "F->F+F-F-F+F", 90, 5, 4),
-				new PredefinedLSystem("Sierpiński Triangle", "F-G-G", "F->F-G+F+G-F, G->GG", 120, 5, 5),
+		return new PredefinedLSystem[] { 
+				new PredefinedLSystem("Quadratic Snowflake", "F-F-F-F", "F->F+F-F-F+F", 90, 5, 4),
+				new PredefinedLSystem("Sierpinski Triangle", "F+X+X", "F->F+X-F-X+F, X->XX", 120, 5, 5),
 				new PredefinedLSystem("Dragon Curve", "FX", "X->X+YF+, Y->-FX-Y", 90, 10, 10),
 				new PredefinedLSystem("L-System Bush1", "Y", "X->X[-FFF][+FFF]FX, Y->YFX[+Y][-Y]", 25.7, 5, 5),
-				new PredefinedLSystem("L-System Bush2", "VZFFF", "V->[+++G][---G]YV, G->+X[-G]Z], X->-G[+X]Z, Y->YZ, Z -> [-FFF][+FFF]F", 20, 5, 5),
-				new PredefinedLSystem("L-System Bush3", "F", "F->FF+[+F-F-F]-[-F+F+F]", 22.5, 5, 5),
-				new PredefinedLSystem("Flower Like Bush", "FX", "X -> >[-FX]+FX", 40, 5, 5),
-				new PredefinedLSystem("L-System Weed", "F", "F->FF-[XY]+[XY], X->+FY, Y->-FX", 22.5, 5, 4),
-				new PredefinedLSystem("L-System Sticks", "X", "F->FF, X->F[+X]F[-X]+X", 20, 5, 6),
+				new PredefinedLSystem("Simple barnching plant", "X", "X->F[-X][X]F[-X]+FX,F->FF", 20, 5, 5),
+				new PredefinedLSystem("Seaweed", "F", "F->FF+[+F-F-F]-[-F+F+F]", 22.5, 7, 4),
+				new PredefinedLSystem("Stick Plant", "X", "X->F[+X][-X]FX, F->FF[-F]F", 20, 6, 4),
+				new PredefinedLSystem("Weed Plant", "X", "X->F[+X][-X]FX, F->FF", 25, 10, 5),
+				new PredefinedLSystem("Simple plant", "X", "F->FF, X->F[+X]F[-X]+X", 20, 5, 6),
+				new PredefinedLSystem("Flower Like Plant", "F", "F->F[+F][-F]", 15, 10, 6),
+				new PredefinedLSystem("Plant", "X", "F->FF, X->F+[[FX]-X]-F[-FX]+X", 20, 8, 5),
+				new PredefinedLSystem("Tree", "X", "F->FF, X->F[+X][-X]", 45, 10, 6),
 				new PredefinedLSystem("Lévy curve", "F", "F->-F++F-", 45, 5, 4),
 				new PredefinedLSystem("Rings", "F+F+F+F", "F->FF+F+F+F+F+F-F", 90, 5, 4),
 				new PredefinedLSystem("Cross", "F+F+F+F", "F->F+F-F+F+F", 90, 5, 4),
@@ -66,8 +69,6 @@ public class PredefinedLSystem {
 				new PredefinedLSystem("Koch Curve", "F+F+F+F", "F->F+F-F-FF+F+F-F", 90, 5, 4),
 				new PredefinedLSystem("Quadratic Koch Island", "F+F+F+F", "F->F+F-F-FFF+F+F-F", 90, 5, 4),
 				new PredefinedLSystem("Crystal", "F+F+F+F", "F->FF+F++F+F", 90, 5, 4),
-				new PredefinedLSystem("Square Sierpinski", "F+XF+F+XF", "X -> XF-F+F-XF+F+XF-F+F-X", 90, 5, 4)
-
-		};
+				new PredefinedLSystem("Sierpinski Square", "F+XF+F+XF", "X -> XF-F+F-XF+F+XF-F+F-X", 90, 5, 4) };
 	}
 }
