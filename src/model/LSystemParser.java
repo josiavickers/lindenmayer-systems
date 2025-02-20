@@ -45,7 +45,7 @@ public class LSystemParser {
 				throw new IllegalArgumentException("Invalid rule format: " + pair);
 			}
 			char key = parts[0].charAt(0);
-			rules.put(key, parts[1]);
+			rules.putIfAbsent(key, parts[1]);
 		}
 		return rules;
 	}
@@ -86,7 +86,7 @@ public class LSystemParser {
 		case "TURNLEFT" -> TurtleCommand.TURNLEFT;
 		case "PUSH" -> TurtleCommand.PUSH;
 		case "POP" -> TurtleCommand.POP;
-		default -> null;
+		default -> throw new IllegalArgumentException("Invalid command encountered: " + command);
 		};
 	}
 }
