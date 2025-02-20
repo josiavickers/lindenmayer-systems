@@ -51,10 +51,13 @@ public class ControlPanel extends JPanel {
 			@Override
 			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
 					boolean cellHasFocus) {
-				super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				if (value instanceof PredefinedLSystem) {
-					setText(((PredefinedLSystem) value).getName());
+				if (value instanceof PredefinedLSystem predefinedLSystem) {
+					setText(predefinedLSystem.getName());
+				}else {
+					setText("");
 				}
+				setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
+		        setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
 				return this;
 			}
 		});
@@ -99,7 +102,7 @@ public class ControlPanel extends JPanel {
 			commands.setEnabled(!checkbox.isSelected());
 		});
 
-		// Rules input
+		// Command input
 		JLabel commandsLabel = new JLabel("Commands:");
 		commandsLabel.setFont(new Font("Arial Black", Font.BOLD, 14));
 		this.add(commandsLabel, "split 2");
@@ -138,7 +141,7 @@ public class ControlPanel extends JPanel {
 		this.add(iterationLabel, "split 2");
 		iterationSpinner = new JSpinner();
 		iterationSpinner = new JSpinner();
-		iterationSpinner.setModel(new SpinnerNumberModel(5, 1, 100, 1));
+		iterationSpinner.setModel(new SpinnerNumberModel(5, 1, 20, 1));
 		iterationSpinner.setToolTipText("Enter Iteration");
 		iterationSpinner.setFont(new Font("Arial Black", Font.BOLD, 14));
 		this.add(iterationSpinner, "wrap");
