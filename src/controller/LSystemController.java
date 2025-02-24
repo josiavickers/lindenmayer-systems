@@ -52,7 +52,7 @@ public class LSystemController {
 			PredefinedLSystem preset = controlPanel.getSelectedPreset();
 
 			// Update UI fields with preset values
-			setPreset(preset.getAxiom(), preset.getRules(), preset.getAngle(), preset.getStep(),
+			setInputsWithPresetValue(preset.getAxiom(), preset.getRules(), preset.getAngle(), preset.getStep(),
 					preset.getIterations());
 
 			generateAndDraw(preset);
@@ -109,7 +109,7 @@ public class LSystemController {
 		drawingPanel.setLSystemString(lSystemString);
 	}
 
-	private void setPreset(String axiom, String rules, double angle, int step, int iterations) {
+	private void setInputsWithPresetValue(String axiom, String rules, double angle, int step, int iterations) {
 		controlPanel.setAxiom(axiom);
 		controlPanel.setRules(rules);
 		controlPanel.setAngle(angle);
