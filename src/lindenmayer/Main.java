@@ -13,7 +13,7 @@ public class Main {
 	public Main() {
 		MainFrame frame = new MainFrame();
 		@SuppressWarnings("unused")
-		LSystemController controller = new LSystemController(frame.getControlPanel(), frame.getCanvasPanel());
+		LSystemController controller = new LSystemController(frame.getControlPanel(), frame.getDrawingPanel());
 	}
 
 	public static void main(String[] args) {

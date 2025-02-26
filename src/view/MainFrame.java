@@ -11,12 +11,12 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
 	private final ControlPanel controlPanel;
-	private final DrawingPanel canvasPanel;
+	private final DrawingPanel drawingPanel;
 	private final MenuBar menuBar;
 
 	public MainFrame() {
 		controlPanel = new ControlPanel();
-		canvasPanel = new DrawingPanel();
+		drawingPanel = new DrawingPanel();
 		menuBar = new MenuBar();
 
 		Dimension screenSize = getToolkit().getScreenSize();
@@ -25,7 +25,7 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		add(canvasPanel, BorderLayout.CENTER);
+		add(drawingPanel, BorderLayout.CENTER);
 		add(controlPanel, BorderLayout.WEST);
 		add(menuBar, BorderLayout.NORTH);
 
@@ -43,7 +43,7 @@ public class MainFrame extends JFrame {
 		return controlPanel;
 	}
 
-	public DrawingPanel getCanvasPanel() {
-		return canvasPanel;
+	public DrawingPanel getDrawingPanel() {
+		return drawingPanel;
 	}
 }
