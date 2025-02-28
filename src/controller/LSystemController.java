@@ -83,11 +83,7 @@ public class LSystemController {
 			LSystemParser lSystem = new LSystemParser(axiom, rules, iterations);
 			Map<Character, TurtleCommand> commandMap;
 
-			if (preset != null) {
-				controlPanel.getCheckbox().setSelected(true);
-			}
-
-			if (controlPanel.getCheckbox().isSelected()) {
+			if (!controlPanel.getCheckbox().isSelected()) {
 				commandMap = TurtleCommand.PREDEFINED_COMMANDS;
 			} else {
 				commandMap = lSystem.parseCommands(controlPanel.getCommands());

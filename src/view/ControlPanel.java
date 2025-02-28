@@ -93,13 +93,14 @@ public class ControlPanel extends JPanel {
 		rules.setMargin(new Insets(5, 10, 5, 10));
 		this.add(rules, "wrap");
 
-		// check box for predefined commands
-		checkbox = new JCheckBox("Use Predefined Commands", true);
+		// check box for custom commands
+		checkbox = new JCheckBox("Use Custom Commands");
+		checkbox.setSelected(false);
 		add(checkbox, "wrap");
 		
-		// Disable commands field if predefined commands are selected
+		// Disable commands field if custom commands aren't selected
 		checkbox.addActionListener(e -> {
-			commands.setEnabled(!checkbox.isSelected());
+			commands.setEnabled(checkbox.isSelected());
 		});
 
 		// Command input
@@ -113,6 +114,7 @@ public class ControlPanel extends JPanel {
 		commands.setToolTipText("Enter Rules");
 		commands.setLineWrap(true);
 		commands.setMargin(new Insets(5, 10, 5, 10));
+		commands.setEnabled(false);
 		this.add(commands, "wrap");
 
 		// Angle spinner
