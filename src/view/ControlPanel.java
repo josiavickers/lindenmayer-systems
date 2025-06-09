@@ -5,6 +5,7 @@ package view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
@@ -24,27 +25,43 @@ import javax.swing.SpinnerNumberModel;
 import model.PredefinedLSystem;
 import net.miginfocom.swing.MigLayout;
 
+/**
+ * ControlPanel is the user interface panel that provides input controls 
+ * for defining and generating L-Systems. This includes fields for axiom, 
+ * production rules, drawing commands, and numerical parameters such as 
+ * turning angle, step length, and iteration depth.
+ * 
+ * This panel also includes a preset drop-down to quickly load commonly 
+ * known L-Systems and options for custom command mappings.
+ * 
+ * The layout is managed using MigLayout for flexibility and clarity.
+ */
 public class ControlPanel extends JPanel {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
+	
 	private JTextField axiomField;
 	private JSpinner angleSpinner;
 	private JSpinner stepSpinner;
 	private JSpinner iterationSpinner;
 	private JButton generateButton;
-	private final JComboBox<PredefinedLSystem> presetComboBox;
+	private JComboBox<PredefinedLSystem> presetComboBox;
 	private JTextArea rules;
 	private JTextArea commands;
-	private final JCheckBox checkbox;
+	private JCheckBox checkbox;
 
+	
+	/**
+	 * Constructs the ControlPanel with all required input fields
+	 */
 	@SuppressWarnings("serial")
 	public ControlPanel() {
-
-		setLayout(new MigLayout());
+		
+		Dimension screenSize = getToolkit().getScreenSize();
+		setLayout(new MigLayout("insets 0 10 0 30"));
 		setBackground(Color.getHSBColor(0.55f, 0.75f, 0.75f));
-
+		setMaximumSize(new Dimension(50,screenSize.height));
+		
 		// Add drop down for presets
 		presetComboBox = new JComboBox<>(PredefinedLSystem.predefinedLSystems());
 		presetComboBox.setRenderer(new DefaultListCellRenderer() {
@@ -53,104 +70,106 @@ public class ControlPanel extends JPanel {
 					boolean cellHasFocus) {
 				if (value instanceof PredefinedLSystem predefinedLSystem) {
 					setText(predefinedLSystem.getName());
-				}else {
+					setHorizontalAlignment(CENTER);
+				} else {
 					setText("");
 				}
 				setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
-		        setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
+				setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
 				return this;
 			}
 		});
-		presetComboBox.setFont(new Font("Arial Black", Font.BOLD, 12));
-		JLabel comboBoxLabel = new JLabel("L-systems:");
-		comboBoxLabel.setFont(new Font("Arial Black", Font.BOLD, 14));
-		this.add(comboBoxLabel, "split 2");
-		add(presetComboBox, "wrap");
+		presetComboBox.setFont(new Font("Arial Black", Font.BOLD, 20));
+		JLabel comboBoxLabel = new JLabel("Common L-systems");
+		comboBoxLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(comboBoxLabel, "wrap, align left");
+		add(presetComboBox, "wrap,gapy 0 10, align center");
 
 		// Axiom input
-		JLabel axiomLabel = new JLabel("Axiom:");
-		axiomLabel.setFont(new Font("Arial Black", Font.BOLD, 14));
-		this.add(axiomLabel, "split 2");
+		JLabel axiomLabel = new JLabel("Axiom");
+		axiomLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(axiomLabel, "wrap,align left");
 
-		axiomField = new JTextField(10); // 10 is number of columns
-		axiomField.setFont(new Font("Arial Black", Font.BOLD, 12));
-		axiomField.setBackground(Color.LIGHT_GRAY);
-		axiomField.setForeground(Color.BLACK);
+		axiomField = new JTextField(13); // 12 is number of columns
+		axiomField.setFont(new Font("Arial Black", Font.BOLD, 20));
 		axiomField.setToolTipText("Enter Axiom");
 		axiomField.setMargin(new Insets(5, 10, 5, 10));
-		this.add(axiomField, "wrap");
+		axiomField.setHorizontalAlignment(JTextField.CENTER);
+		add(axiomField, "wrap,gapy 0 10, align center");
 
-		// Rules input
-		JLabel rulesLabel = new JLabel("Rules:");
-		rulesLabel.setFont(new Font("Arial Black", Font.BOLD, 14));
-		this.add(rulesLabel, "split 2");
-		rules = new JTextArea(2, 20);
-		rules.setFont(new Font("Arial Black", Font.BOLD, 12));
-		rules.setBackground(Color.LIGHT_GRAY);
-		rules.setForeground(Color.BLACK);
-		rules.setToolTipText("Enter Rules");
+		// Production Rules input
+		JLabel rulesLabel = new JLabel("Production Rules");
+		rulesLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(rulesLabel, "wrap, align left");
+		rules = new JTextArea(2,13);
+		rules.setFont(new Font("Arial Black", Font.BOLD, 20));
+		rules.setToolTipText("Enter Production Rules");
+		rules.setAlignmentY(CENTER_ALIGNMENT);
 		rules.setLineWrap(true);
 		rules.setMargin(new Insets(5, 10, 5, 10));
-		this.add(rules, "wrap");
+		add(rules, "wrap,gapy 0 10, align center");
 
 		// check box for custom commands
 		checkbox = new JCheckBox("Use Custom Commands");
+		checkbox.setFont(new Font("Arial Black", Font.BOLD, 19));
 		checkbox.setSelected(false);
-		add(checkbox, "wrap");
-		
+		add(checkbox, "wrap, gapy 0 10,align left");
+
 		// Disable commands field if custom commands aren't selected
 		checkbox.addActionListener(e -> {
 			commands.setEnabled(checkbox.isSelected());
 		});
 
 		// Command input
-		JLabel commandsLabel = new JLabel("Commands:");
-		commandsLabel.setFont(new Font("Arial Black", Font.BOLD, 14));
-		this.add(commandsLabel, "split 2");
-		commands = new JTextArea(2, 20);
-		commands.setFont(new Font("Arial Black", Font.BOLD, 12));
-		commands.setBackground(Color.LIGHT_GRAY);
-		commands.setForeground(Color.BLACK);
-		commands.setToolTipText("Enter Rules");
+		JLabel commandsLabel = new JLabel("Commands");
+		commandsLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(commandsLabel, "wrap, align left");
+		commands = new JTextArea(2,13);
+		commands.setFont(new Font("Arial Black", Font.BOLD,20));
+		commands.setToolTipText("Enter Commands");
 		commands.setLineWrap(true);
 		commands.setMargin(new Insets(5, 10, 5, 10));
 		commands.setEnabled(false);
-		this.add(commands, "wrap");
+		add(commands, "wrap,gapy 0 10, align center");
 
-		// Angle spinner
-		JLabel angleLabel = new JLabel("Angle: ");
-		angleLabel.setFont(new Font("Arial Black", Font.BOLD, 14));
-		this.add(angleLabel, "split 2");
+		// Turning Angle spinner
+		JLabel angleLabel = new JLabel("Turning Angle:     ");
+		angleLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(angleLabel, "split 2, alignx left");
 		angleSpinner = new JSpinner();
-		angleSpinner.setModel(new SpinnerNumberModel(45.0, 0.0, 360.0, 5.0));
-		angleSpinner.setToolTipText("Enter Angle");
-		angleSpinner.setFont(new Font("Arial Black", Font.BOLD, 14));
-		this.add(angleSpinner, "wrap");
+		angleSpinner.setModel(new SpinnerNumberModel(45.0, 0.0, 360.0, 0.5));
+		angleSpinner.setToolTipText("Enter Rotation Angle");
+		angleSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(angleSpinner, "wrap,gapy 0 10, alignx right");
 
-		// Step spinner
-		JLabel stepLabel = new JLabel("Step: ");
-		stepLabel.setFont(new Font("Arial Black", Font.BOLD, 14));
-		this.add(stepLabel, "split 2");
+		// Step Length spinner
+		JLabel stepLabel = new JLabel(" Step Length:       ");
+		stepLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(stepLabel, "split 2, alignx left");
 		stepSpinner = new JSpinner();
 		stepSpinner.setModel(new SpinnerNumberModel(5, 1, 100, 1));
-		stepSpinner.setToolTipText("Enter Step");
-		stepSpinner.setFont(new Font("Arial Black", Font.BOLD, 14));
-		this.add(stepSpinner, "wrap");
+		stepSpinner.setToolTipText("Enter Step Length");
+		stepSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(stepSpinner, "wrap,gapy 0 10, alignx right");
+		
 
-		// Iteration spinner
-		JLabel iterationLabel = new JLabel("Iteration: ");
-		iterationLabel.setFont(new Font("Arial Black", Font.BOLD, 14));
-		this.add(iterationLabel, "split 2");
+		// Iteration Depth spinner
+		JLabel iterationLabel = new JLabel(" Iteration Depth: ");
+		iterationLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		
+		add(iterationLabel, "split 2, alignx left");
 		iterationSpinner = new JSpinner();
 		iterationSpinner = new JSpinner();
 		iterationSpinner.setModel(new SpinnerNumberModel(5, 1, 20, 1));
-		iterationSpinner.setToolTipText("Enter Iteration");
-		iterationSpinner.setFont(new Font("Arial Black", Font.BOLD, 14));
-		this.add(iterationSpinner, "wrap");
+		iterationSpinner.setToolTipText("Enter Iteration Depth");
+		iterationSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+		iterationSpinner.setSize(8,4);
+		add(iterationSpinner, "w 83, wrap,gapy 0 10, alignx right");
 
 		// Render button
 		generateButton = new JButton("Generate");
-		this.add(generateButton, "align center");
+		generateButton.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(generateButton, "gapy 40 5,align center");
 
 	}
 

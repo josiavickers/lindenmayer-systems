@@ -13,9 +13,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -23,23 +27,35 @@ import javax.swing.SwingUtilities;
 import model.Turtle;
 import model.TurtleCommand;
 
+/**
+ * The DrawingPanel is responsible for rendering the L-System pattern using
+ * turtle graphics. It supports interactive zooming, panning, and saving the
+ * rendered image.
+ */
 public class DrawingPanel extends JPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
+
+	// Core drawing parameters
 	private String lSystemString;
 	private double angle;
 	private int step;
+	private Map<Character, TurtleCommand> commandMap = new HashMap<>();
+
+	// View transformation parameters
 	private double scalingFactor = 1.0;
 	private final double SCALE_STEP = 0.1;
 	private final double MINIMUM_ZOOMOUT_SCALE = 0.1;
 	private double offsetX = 0;
 	private double offsetY = 0;
 	private Point lastMousePosition;
-	private Map<Character, TurtleCommand> commandMap = new HashMap<>();
+
+	// Flag to prevent repeated error message dialog
 	private boolean errorDisplayed = false;
 
+	/**
+	 * Initializes the drawing panel with default background and input listeners.
+	 */
 	public DrawingPanel() {
 		setLayout(new BorderLayout());
 		setBackground(new Color(200, 200, 164));
@@ -47,6 +63,10 @@ public class DrawingPanel extends JPanel {
 		setupPanningListener();
 	}
 
+	/**
+	 * Main rendering logic for the L-System. Called automatically when repaint() is
+	 * triggered.
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -55,10 +75,15 @@ public class DrawingPanel extends JPanel {
 			return;
 
 		Graphics2D g2 = (Graphics2D) g;
+
+		// Apply zoom and panning transformations
 		g2.translate(offsetX, offsetY);
 		g2.scale(scalingFactor, scalingFactor);
+
+		// Initialize turtle at screen midpoint
 		Turtle turtle = new Turtle(g2, screenMid().x, screenMid().y);
 		turtle.dropPen();
+
 		try {
 			for (char ch : lSystemString.toCharArray()) {
 				TurtleCommand command = commandMap.get(ch);
@@ -73,11 +98,12 @@ public class DrawingPanel extends JPanel {
 		} catch (Exception e) {
 			showErrorDialog("Unexpected error while drawing: " + e.getMessage());
 		}
-
 	}
 
+	/**
+	 * Validates that required input fields are set before rendering begins.
+	 */
 	private boolean validateInputs() {
-
 		if (lSystemString == null || lSystemString.isBlank()) {
 			showErrorDialog("L-System string is null or empty. Nothing to draw.");
 			return false;
@@ -89,6 +115,9 @@ public class DrawingPanel extends JPanel {
 		return true;
 	}
 
+	/**
+	 * Executes a turtle instruction based on the provided command.
+	 */
 	private void handleTurtleCommand(Turtle turtle, TurtleCommand command) {
 
 		switch (command) {
@@ -100,6 +129,18 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Saves the current panel content as an image.
+	 */
+	public void saveImage(File file, String format) throws IOException {
+		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = image.createGraphics();
+		this.paint(g2d);
+		g2d.dispose();
+		ImageIO.write(image, format, file);
+	}
+
+	// Setters for rendering parameters
 	public void setLSystemString(String lSystemString) {
 		this.lSystemString = lSystemString;
 		repaint();
@@ -117,12 +158,19 @@ public class DrawingPanel extends JPanel {
 		this.commandMap = commandMap;
 	}
 
+	/**
+	 * Returns the center-bottom starting point for the turtle. Ensures consistent
+	 * starting location regardless of canvas size.
+	 */
 	private Point screenMid() {
 		int x = getWidth() / 2;
-		int y = getHeight() -100;
+		int y = getHeight() - 100;
 		return new Point(x, y);
 	}
 
+	/**
+	 * Adds a mouse wheel listener to support zoom functionality.
+	 */
 	public void setupZoomListner() {
 		addMouseWheelListener(new MouseWheelListener() {
 			@Override
@@ -135,7 +183,7 @@ public class DrawingPanel extends JPanel {
 
 				double factor = scalingFactor / oldScale;
 
-				// Get mouse pointer position
+				// Adjust offsets to keep zoom centered at cursor
 				Point mousePoint = e.getPoint();
 				offsetX = mousePoint.getX() - factor * (mousePoint.getX() - offsetX);
 				offsetY = mousePoint.getY() - factor * (mousePoint.getY() - offsetY);
@@ -145,6 +193,9 @@ public class DrawingPanel extends JPanel {
 		});
 	}
 
+	/**
+	 * Adds mouse listeners to support panning of the drawing.
+	 */
 	private void setupPanningListener() {
 
 		addMouseListener(new MouseAdapter() {
@@ -169,13 +220,17 @@ public class DrawingPanel extends JPanel {
 		});
 	}
 
+	/**
+	 * Shows a dialog box for critical errors encountered during rendering. Ensures
+	 * it is only shown once at a time.
+	 */
 	private void showErrorDialog(String message) {
 		if (!errorDisplayed) {
-	        errorDisplayed = true; 
-	        SwingUtilities.invokeLater(() -> {
-	            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
-	            errorDisplayed = false; 
-	        });
-	    }
+			errorDisplayed = true;
+			SwingUtilities.invokeLater(() -> {
+				JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+				errorDisplayed = false;
+			});
+		}
 	}
 }

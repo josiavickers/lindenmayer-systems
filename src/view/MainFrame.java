@@ -7,13 +7,18 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
-	private final ControlPanel controlPanel;
-	private final DrawingPanel drawingPanel;
-	private final MenuBar menuBar;
+	private ControlPanel controlPanel;
+	private DrawingPanel drawingPanel;
+	private MenuBar menuBar;
 
+	/**
+	 * Constructs the main application window with control panel, drawing panel, and
+	 * menu bar.
+	 */
 	public MainFrame() {
 		controlPanel = new ControlPanel();
 		drawingPanel = new DrawingPanel();
@@ -25,16 +30,22 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		add(drawingPanel, BorderLayout.CENTER);
-		add(controlPanel, BorderLayout.WEST);
-		add(menuBar, BorderLayout.NORTH);
+		// Wrap the control panel in a scroll pane
+		JScrollPane scrollPane = new JScrollPane(controlPanel);
 
-		// setIconImage(Toolkit.getDefaultToolkit().getImage(Main.class.getResource("/lindenmayer/plant.png")));
+		// Configure scroll pane behavior
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+		add(drawingPanel, BorderLayout.CENTER);
+		add(scrollPane, BorderLayout.WEST);
+		add(menuBar, BorderLayout.NORTH);
 
 		setVisible(true);
 
 	}
 
+	// Getters
 	public MenuBar getMenu() {
 		return menuBar;
 	}
