@@ -13,7 +13,6 @@ import javax.swing.JScrollPane;
 public class MainFrame extends JFrame {
 	private ControlPanel controlPanel;
 	private DrawingPanel drawingPanel;
-	private MenuBar menuBar;
 
 	/**
 	 * Constructs the main application window with control panel, drawing panel, and
@@ -22,7 +21,6 @@ public class MainFrame extends JFrame {
 	public MainFrame() {
 		controlPanel = new ControlPanel();
 		drawingPanel = new DrawingPanel();
-		menuBar = new MenuBar();
 
 		Dimension screenSize = getToolkit().getScreenSize();
 		setTitle("L-System Generator and Visualizer");
@@ -39,17 +37,12 @@ public class MainFrame extends JFrame {
 
 		add(drawingPanel, BorderLayout.CENTER);
 		add(scrollPane, BorderLayout.WEST);
-		add(menuBar, BorderLayout.NORTH);
 
 		setVisible(true);
 
 	}
 
 	// Getters
-	public MenuBar getMenu() {
-		return menuBar;
-	}
-
 	public ControlPanel getControlPanel() {
 		return controlPanel;
 	}

@@ -11,8 +11,6 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -44,11 +42,8 @@ public class ControlPanel extends JPanel {
 	private JSpinner angleSpinner;
 	private JSpinner stepSpinner;
 	private JSpinner iterationSpinner;
-	private JButton generateButton;
 	private JComboBox<PredefinedLSystem> presetComboBox;
 	private JTextArea rules;
-	private JTextArea commands;
-	private JCheckBox checkbox;
 
 	
 	/**
@@ -109,29 +104,6 @@ public class ControlPanel extends JPanel {
 		rules.setMargin(new Insets(5, 10, 5, 10));
 		add(rules, "wrap,gapy 0 10, align center");
 
-		// check box for custom commands
-		checkbox = new JCheckBox("Use Custom Commands");
-		checkbox.setFont(new Font("Arial Black", Font.BOLD, 19));
-		checkbox.setSelected(false);
-		add(checkbox, "wrap, gapy 0 10,align left");
-
-		// Disable commands field if custom commands aren't selected
-		checkbox.addActionListener(e -> {
-			commands.setEnabled(checkbox.isSelected());
-		});
-
-		// Command input
-		JLabel commandsLabel = new JLabel("Commands");
-		commandsLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(commandsLabel, "wrap, align left");
-		commands = new JTextArea(2,13);
-		commands.setFont(new Font("Arial Black", Font.BOLD,20));
-		commands.setToolTipText("Enter Commands");
-		commands.setLineWrap(true);
-		commands.setMargin(new Insets(5, 10, 5, 10));
-		commands.setEnabled(false);
-		add(commands, "wrap,gapy 0 10, align center");
-
 		// Turning Angle spinner
 		JLabel angleLabel = new JLabel("Turning Angle:     ");
 		angleLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
@@ -165,12 +137,6 @@ public class ControlPanel extends JPanel {
 		iterationSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
 		iterationSpinner.setSize(8,4);
 		add(iterationSpinner, "w 83, wrap,gapy 0 10, alignx right");
-
-		// Render button
-		generateButton = new JButton("Generate");
-		generateButton.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(generateButton, "gapy 40 5,align center");
-
 	}
 
 	// Getters
@@ -180,10 +146,6 @@ public class ControlPanel extends JPanel {
 
 	public String getRules() {
 		return rules.getText();
-	}
-
-	public String getCommands() {
-		return commands.getText();
 	}
 
 	public JSpinner getAngleSpinner() {
@@ -210,14 +172,6 @@ public class ControlPanel extends JPanel {
 		return (int) iterationSpinner.getValue();
 	}
 
-	public JButton getGenerateButton() {
-		return generateButton;
-	}
-
-	public JCheckBox getCheckbox() {
-		return checkbox;
-	}
-
 	public PredefinedLSystem getSelectedPreset() {
 		return (PredefinedLSystem) presetComboBox.getSelectedItem();
 	}
@@ -229,10 +183,6 @@ public class ControlPanel extends JPanel {
 
 	public void setRules(String str) {
 		rules.setText(str);
-	}
-
-	public void setCommands(String str) {
-		commands.setText(str);
 	}
 
 	public void setAngle(double deg) {
@@ -255,9 +205,5 @@ public class ControlPanel extends JPanel {
 	// Add listeners
 	public void addPresetComboBoxListener(ActionListener listener) {
 		presetComboBox.addActionListener(listener);
-	}
-
-	public void addButtonListener(ActionListener listener) {
-		generateButton.addActionListener(listener);
 	}
 }

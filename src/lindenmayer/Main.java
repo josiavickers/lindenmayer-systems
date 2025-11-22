@@ -20,7 +20,8 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
+		// invokeLater() to run programme on Event Dispatch Thread (EDT) from Swing utilities - handling UI and button actions etc
+		SwingUtilities.invokeLater(new Runnable() { // instantiates anon class implementing Runnable() interface and its run() method
 
 			@Override
 			public void run() {
