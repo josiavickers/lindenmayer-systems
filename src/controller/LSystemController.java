@@ -3,17 +3,10 @@
  */
 package controller;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.awt.Color;
 import java.util.Map;
 
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.LSystemParser;
 import model.PredefinedLSystem;
@@ -61,13 +54,15 @@ public class LSystemController {
 	}
 
 	/**
-	 * Adds listeners for iteration depth, turning angle, and step length spinners.
+	 * Adds listeners for iteration depth, turning angle, thickness, colour and step length spinners.
 	 * Each change will trigger regeneration of the L-System drawing.
 	 */
 	private void setupEventHandler() {
 		controlPanel.getIterationSpinner().addChangeListener(e -> onGenerateClicked());
 		controlPanel.getAngleSpinner().addChangeListener(e -> onGenerateClicked());
 		controlPanel.getStepSpinner().addChangeListener(e -> onGenerateClicked());
+		controlPanel.getThicknessSpinner().addChangeListener(e -> onGenerateClicked());
+		controlPanel.getColourComboBox().addActionListener(e -> onGenerateClicked());
 	}
 
 	/**
@@ -79,7 +74,7 @@ public class LSystemController {
 			PredefinedLSystem preset = controlPanel.getSelectedPreset();
 
 			setInputsWithPresetValue(preset.getAxiom(), preset.getRules(), preset.getAngle(), preset.getStep(),
-					preset.getIterations());
+					preset.getIterations(), preset.getThickness(), preset.getColour());
 
 			generateAndDraw(preset);
 		} catch (Exception e) {
@@ -111,6 +106,8 @@ public class LSystemController {
 			String rules = preset != null ? preset.getRules() : controlPanel.getRules();
 			double angle = preset != null ? preset.getAngle() : controlPanel.getAngle();
 			int step = preset != null ? preset.getStep() : controlPanel.getStep();
+			int thickness = preset != null ? preset.getThickness() : controlPanel.getThickness();
+			Color colour = preset != null ? preset.getColour() : controlPanel.getColour();
 			int iterations = preset != null ? preset.getIterations() : controlPanel.getIteration();
 
 			// Generate L-System string
@@ -123,7 +120,7 @@ public class LSystemController {
 
 			String lSystemString = lSystem.generateLSystemString();
 
-			updateDrawingPanel(angle, step, commandMap, lSystemString);
+			updateDrawingPanel(angle, step, thickness, colour, commandMap, lSystemString);
 
 		} catch (Exception e) {
 			showErrorDialog("Error generating L-System: " + e.getMessage());
@@ -133,10 +130,12 @@ public class LSystemController {
 	/**
 	 * Updates the drawing panel with new configuration and L-System string.
 	 */
-	private void updateDrawingPanel(double angle, int step, Map<Character, TurtleCommand> commandMap,
+	private void updateDrawingPanel(double angle, int step, int thickness, Color colour, Map<Character, TurtleCommand> commandMap,
 			String lSystemString) {
 		drawingPanel.setAngle(angle);
 		drawingPanel.setStep(step);
+		drawingPanel.setThickness(thickness);
+		drawingPanel.setColour(colour);
 		drawingPanel.setCommandMap(commandMap);
 		drawingPanel.setLSystemString(lSystemString);
 	}
@@ -145,11 +144,13 @@ public class LSystemController {
 	 * Sets input fields in the control panel using the selected predefined
 	 * L-system.
 	 */
-	private void setInputsWithPresetValue(String axiom, String rules, double angle, int step, int iterations) {
+	private void setInputsWithPresetValue(String axiom, String rules, double angle, int step, int iterations, int thickness, Color colour) {
 		controlPanel.setAxiom(axiom);
 		controlPanel.setRules(rules);
 		controlPanel.setAngle(angle);
 		controlPanel.setStep(step);
+		controlPanel.setThickness(thickness);
+		controlPanel.setColour(colour);
 		controlPanel.setIterations(iterations);
 	}
 

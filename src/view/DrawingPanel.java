@@ -13,13 +13,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -40,6 +36,8 @@ public class DrawingPanel extends JPanel {
 	private String lSystemString;
 	private double angle;
 	private int step;
+	private int thickness;
+	private Color colour;
 	private Map<Character, TurtleCommand> commandMap = new HashMap<>();
 
 	// View transformation parameters
@@ -121,23 +119,12 @@ public class DrawingPanel extends JPanel {
 	private void handleTurtleCommand(Turtle turtle, TurtleCommand command) {
 
 		switch (command) {
-		case MOVE -> turtle.move(step);
+		case MOVE -> turtle.move(step, thickness, colour);
 		case TURNRIGHT -> turtle.right(angle);
 		case TURNLEFT -> turtle.left(angle);
 		case PUSH -> turtle.push();
 		case POP -> turtle.pop();
 		}
-	}
-
-	/**
-	 * Saves the current panel content as an image.
-	 */
-	public void saveImage(File file, String format) throws IOException {
-		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2d = image.createGraphics();
-		this.paint(g2d);
-		g2d.dispose();
-		ImageIO.write(image, format, file);
 	}
 
 	// Setters for rendering parameters
@@ -152,6 +139,14 @@ public class DrawingPanel extends JPanel {
 
 	public void setStep(int step) {
 		this.step = step;
+	}
+	
+	public void setThickness(int thickness) {
+		this.thickness = thickness;
+	}
+	
+	public void setColour(Color colour) {
+		this.colour = colour;
 	}
 
 	public void setCommandMap(Map<Character, TurtleCommand> commandMap) {

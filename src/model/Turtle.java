@@ -32,12 +32,16 @@ public class Turtle {
 		liftPen();
 	}
 
-	public void move(double step) {
+	public void move(double step, int thickness, Color colour) {
+		Graphics2D g2 = (Graphics2D) this.g; // To accommodate stroke thickness
+		g2.setStroke(new BasicStroke(thickness));
+		
 		int dx = (int) (Math.cos(state.angle) * step);
 		int dy = (int) (Math.sin(state.angle) * step);
 		dy = -dy;
 		if (state.pendown) {
-			g.drawLine(state.x, state.y, state.x + dx, state.y + dy);
+			g2.setColor(colour);
+			g2.drawLine(state.x, state.y, state.x + dx, state.y + dy);
 		}
 		state.x += dx;
 		state.y += dy;

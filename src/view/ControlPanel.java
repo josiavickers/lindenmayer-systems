@@ -42,7 +42,9 @@ public class ControlPanel extends JPanel {
 	private JSpinner angleSpinner;
 	private JSpinner stepSpinner;
 	private JSpinner iterationSpinner;
+	private JSpinner thicknessSpinner;
 	private JComboBox<PredefinedLSystem> presetComboBox;
+	private JComboBox<Color> colourComboBox;
 	private JTextArea rules;
 
 	
@@ -124,19 +126,73 @@ public class ControlPanel extends JPanel {
 		stepSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(stepSpinner, "wrap,gapy 0 10, alignx right");
 		
-
 		// Iteration Depth spinner
 		JLabel iterationLabel = new JLabel(" Iteration Depth: ");
 		iterationLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
-		
 		add(iterationLabel, "split 2, alignx left");
-		iterationSpinner = new JSpinner();
 		iterationSpinner = new JSpinner();
 		iterationSpinner.setModel(new SpinnerNumberModel(5, 1, 20, 1));
 		iterationSpinner.setToolTipText("Enter Iteration Depth");
 		iterationSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
 		iterationSpinner.setSize(8,4);
 		add(iterationSpinner, "w 83, wrap,gapy 0 10, alignx right");
+		
+		// Thickness spinner
+		JLabel thicknessLabel = new JLabel(" Stroke Thickness: ");
+		thicknessLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(thicknessLabel, "split 2, alignx left");
+		thicknessSpinner = new JSpinner();
+		thicknessSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
+		thicknessSpinner.setToolTipText("Enter Stroke Thickness");
+		thicknessSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(thicknessSpinner, "w 83, wrap,gapy 0 10, alignx right");
+		
+		// Add drop down for colour
+		colourComboBox = new JComboBox<>(new Color[] {
+			    Color.RED,
+			    Color.BLUE,
+			    Color.GREEN,
+			    Color.YELLOW,
+			    Color.BLACK,
+			    Color.WHITE,
+			    Color.ORANGE,
+			    Color.GRAY
+		});
+		
+		colourComboBox.setRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+		        if (value instanceof Color color) {
+		            setText(getColourName(color));
+		        } else {
+		            setText("");
+		        }
+				setHorizontalAlignment(CENTER);
+				setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
+				setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
+				return this;
+			}
+			
+		    private String getColourName(Color color) {
+		        if (Color.RED.equals(color))     return "Red";
+		        if (Color.BLUE.equals(color))    return "Blue";
+		        if (Color.GREEN.equals(color))   return "Green";
+		        if (Color.YELLOW.equals(color))  return "Yellow";
+		        if (Color.BLACK.equals(color))   return "Black";
+		        if (Color.WHITE.equals(color))   return "White";
+		        if (Color.ORANGE.equals(color))  return "Orange";
+		        if (Color.GRAY.equals(color))    return "Gray";
+
+		        // For unexpected colours
+		        return String.format("RGB(%d,%d,%d)", color.getRed(), color.getGreen(), color.getBlue());
+		    }
+		});
+		colourComboBox.setFont(new Font("Arial Black", Font.BOLD, 20));
+		JLabel colourBoxLabel = new JLabel("Colour:");
+		colourBoxLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(colourBoxLabel, "split 2, alignx left");
+		add(colourComboBox, "wrap,gapy 0 10, align right");
 	}
 
 	// Getters
@@ -167,6 +223,14 @@ public class ControlPanel extends JPanel {
 	public JSpinner getIterationSpinner() {
 		return iterationSpinner;
 	}
+	
+	public JSpinner getThicknessSpinner() {
+		return thicknessSpinner;
+	}
+	
+	public int getThickness() {
+		return (int) thicknessSpinner.getValue();
+	}
 
 	public int getIteration() {
 		return (int) iterationSpinner.getValue();
@@ -174,6 +238,14 @@ public class ControlPanel extends JPanel {
 
 	public PredefinedLSystem getSelectedPreset() {
 		return (PredefinedLSystem) presetComboBox.getSelectedItem();
+	}
+	
+	public JComboBox<Color> getColourComboBox() {
+		return colourComboBox;
+	}
+	
+	public Color getColour() {
+		return (Color) colourComboBox.getSelectedItem();
 	}
 
 	// Setters
@@ -190,12 +262,19 @@ public class ControlPanel extends JPanel {
 	}
 
 	public void setIterations(int iterations) {
-
 		iterationSpinner.setValue(iterations);
+	}
+	
+	public void setThickness(int thickness) {
+		thicknessSpinner.setValue(thickness);
 	}
 
 	public void setStep(int length) {
 		stepSpinner.setValue(length);
+	}
+	
+	public void setColour(Color colour) {
+		colourComboBox.setSelectedItem(colour);
 	}
 
 	public void setSelectedPreset(PredefinedLSystem preset) {
