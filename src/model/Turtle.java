@@ -32,9 +32,9 @@ public class Turtle {
 		liftPen();
 	}
 
-	public void move(double step, int thickness, Color colour) {
+	public void move(double step, double thickness, Color colour) {
 		Graphics2D g2 = (Graphics2D) this.g; // To accommodate stroke thickness
-		g2.setStroke(new BasicStroke(thickness));
+		g2.setStroke(new BasicStroke((float)thickness));
 		
 		int dx = (int) (Math.cos(state.angle) * step);
 		int dy = (int) (Math.sin(state.angle) * step);

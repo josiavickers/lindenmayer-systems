@@ -40,9 +40,13 @@ public class ControlPanel extends JPanel {
 	
 	private JTextField axiomField;
 	private JSpinner angleSpinner;
+	private JSpinner angleFactorSpinner;
 	private JSpinner stepSpinner;
+	private JSpinner stepFactorSpinner;
 	private JSpinner iterationSpinner;
 	private JSpinner thicknessSpinner;
+	private JSpinner thicknessFactorSpinner;
+	private JSpinner colourFactorSpinner;
 	private JComboBox<PredefinedLSystem> presetComboBox;
 	private JComboBox<Color> colourComboBox;
 	private JTextArea rules;
@@ -115,6 +119,16 @@ public class ControlPanel extends JPanel {
 		angleSpinner.setToolTipText("Enter Rotation Angle");
 		angleSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(angleSpinner, "wrap,gapy 0 10, alignx right");
+		
+		// Turning Angle Factor spinner
+		JLabel angleFactorLabel = new JLabel("Angle Factor:     ");
+		angleFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(angleFactorLabel, "split 2, alignx left");
+		angleFactorSpinner = new JSpinner();
+		angleFactorSpinner.setModel(new SpinnerNumberModel(1.0, 0.1, 2.0, 0.1));
+		angleFactorSpinner.setToolTipText("Enter Factor");
+		angleFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(angleFactorSpinner, "wrap,gapy 0 10, alignx right");
 
 		// Step Length spinner
 		JLabel stepLabel = new JLabel(" Step Length:       ");
@@ -125,6 +139,16 @@ public class ControlPanel extends JPanel {
 		stepSpinner.setToolTipText("Enter Step Length");
 		stepSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(stepSpinner, "wrap,gapy 0 10, alignx right");
+		
+		// Step Length Factor spinner
+		JLabel stepFactorLabel = new JLabel("Step Factor:     ");
+		stepFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(stepFactorLabel, "split 2, alignx left");
+		stepFactorSpinner = new JSpinner();
+		stepFactorSpinner.setModel(new SpinnerNumberModel(1.0, 0.1, 2.0, 0.1));
+		stepFactorSpinner.setToolTipText("Enter Factor");
+		stepFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(stepFactorSpinner, "wrap,gapy 0 10, alignx right");
 		
 		// Iteration Depth spinner
 		JLabel iterationLabel = new JLabel(" Iteration Depth: ");
@@ -146,6 +170,16 @@ public class ControlPanel extends JPanel {
 		thicknessSpinner.setToolTipText("Enter Stroke Thickness");
 		thicknessSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(thicknessSpinner, "w 83, wrap,gapy 0 10, alignx right");
+		
+		// Thickness Factor spinner
+		JLabel thicknessFactorLabel = new JLabel("Thickness Factor:     ");
+		thicknessFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(thicknessFactorLabel, "split 2, alignx left");
+		thicknessFactorSpinner = new JSpinner();
+		thicknessFactorSpinner.setModel(new SpinnerNumberModel(1.0, 0.1, 2.0, 0.1));
+		thicknessFactorSpinner.setToolTipText("Enter Factor");
+		thicknessFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(thicknessFactorSpinner, "wrap,gapy 0 10, alignx right");
 		
 		// Add drop down for colour
 		colourComboBox = new JComboBox<>(new Color[] {
@@ -193,6 +227,16 @@ public class ControlPanel extends JPanel {
 		colourBoxLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(colourBoxLabel, "split 2, alignx left");
 		add(colourComboBox, "wrap,gapy 0 10, align right");
+		
+		// Thickness Factor spinner
+		JLabel colourFactorLabel = new JLabel("Colour Factor:     ");
+		colourFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(colourFactorLabel, "split 2, alignx left");
+		colourFactorSpinner = new JSpinner();
+		colourFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
+		colourFactorSpinner.setToolTipText("Enter Factor");
+		colourFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(colourFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
 	}
 
 	// Getters
@@ -211,6 +255,14 @@ public class ControlPanel extends JPanel {
 	public double getAngle() {
 		return (double) angleSpinner.getValue();
 	}
+	
+	public JSpinner getAngleFactorSpinner() {
+		return angleFactorSpinner;
+	}
+
+	public double getAngleFactor() {
+		return (double) angleFactorSpinner.getValue();
+	}
 
 	public JSpinner getStepSpinner() {
 		return stepSpinner;
@@ -218,6 +270,14 @@ public class ControlPanel extends JPanel {
 
 	public int getStep() {
 		return (int) stepSpinner.getValue();
+	}
+	
+	public JSpinner getStepFactorSpinner() {
+		return stepFactorSpinner;
+	}
+
+	public double getStepFactor() {
+		return (double) stepFactorSpinner.getValue();
 	}
 
 	public JSpinner getIterationSpinner() {
@@ -230,6 +290,22 @@ public class ControlPanel extends JPanel {
 	
 	public int getThickness() {
 		return (int) thicknessSpinner.getValue();
+	}
+	
+	public JSpinner getThicknessFactorSpinner() {
+		return thicknessFactorSpinner;
+	}
+
+	public double getThicknessFactor() {
+		return (double) thicknessFactorSpinner.getValue();
+	}
+	
+	public JSpinner getColourFactorSpinner() {
+		return colourFactorSpinner;
+	}
+
+	public double getColourFactor() {
+		return (double) colourFactorSpinner.getValue();
 	}
 
 	public int getIteration() {
@@ -260,6 +336,10 @@ public class ControlPanel extends JPanel {
 	public void setAngle(double deg) {
 		angleSpinner.setValue(deg);
 	}
+	
+	public void setAngleFactor(double deg) {
+		angleFactorSpinner.setValue(deg);
+	}
 
 	public void setIterations(int iterations) {
 		iterationSpinner.setValue(iterations);
@@ -268,9 +348,17 @@ public class ControlPanel extends JPanel {
 	public void setThickness(int thickness) {
 		thicknessSpinner.setValue(thickness);
 	}
+	
+	public void setThicknessFactor(double deg) {
+		thicknessFactorSpinner.setValue(deg);
+	}
 
 	public void setStep(int length) {
 		stepSpinner.setValue(length);
+	}
+	
+	public void setStepFactor(double deg) {
+		stepFactorSpinner.setValue(deg);
 	}
 	
 	public void setColour(Color colour) {

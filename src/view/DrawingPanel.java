@@ -35,8 +35,8 @@ public class DrawingPanel extends JPanel {
 	// Core drawing parameters
 	private String lSystemString;
 	private double angle;
-	private int step;
-	private int thickness;
+	private double step;
+	private double thickness;
 	private Color colour;
 	private Map<Character, TurtleCommand> commandMap = new HashMap<>();
 
@@ -86,7 +86,9 @@ public class DrawingPanel extends JPanel {
 			for (char ch : lSystemString.toCharArray()) {
 				TurtleCommand command = commandMap.get(ch);
 				try {
-					handleTurtleCommand(turtle, command);
+					handleTurtleCommand(turtle, command); // COULD TRY ADDING GLOBAL VAR ITERATION
+					// GO TO METHOD FOR NEXT IDEA
+					// DEPENDING ON TYPE OF COMMAND, MODULATE ANGLE, STEP ETC TO VARYING DEGREES DEPENDING ON CURRENT ITERATION
 
 				} catch (Exception e) {
 					showErrorDialog("No command provided for character: '" + ch + "'");
@@ -117,7 +119,6 @@ public class DrawingPanel extends JPanel {
 	 * Executes a turtle instruction based on the provided command.
 	 */
 	private void handleTurtleCommand(Turtle turtle, TurtleCommand command) {
-
 		switch (command) {
 		case MOVE -> turtle.move(step, thickness, colour);
 		case TURNRIGHT -> turtle.right(angle);
@@ -137,11 +138,11 @@ public class DrawingPanel extends JPanel {
 		this.angle = angle;
 	}
 
-	public void setStep(int step) {
+	public void setStep(double step) {
 		this.step = step;
 	}
 	
-	public void setThickness(int thickness) {
+	public void setThickness(double thickness) {
 		this.thickness = thickness;
 	}
 	

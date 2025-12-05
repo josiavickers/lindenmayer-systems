@@ -60,8 +60,12 @@ public class LSystemController {
 	private void setupEventHandler() {
 		controlPanel.getIterationSpinner().addChangeListener(e -> onGenerateClicked());
 		controlPanel.getAngleSpinner().addChangeListener(e -> onGenerateClicked());
+		controlPanel.getAngleFactorSpinner().addChangeListener(e -> onGenerateClicked());
 		controlPanel.getStepSpinner().addChangeListener(e -> onGenerateClicked());
+		controlPanel.getStepFactorSpinner().addChangeListener(e -> onGenerateClicked());
 		controlPanel.getThicknessSpinner().addChangeListener(e -> onGenerateClicked());
+		controlPanel.getThicknessFactorSpinner().addChangeListener(e -> onGenerateClicked());
+		controlPanel.getColourFactorSpinner().addChangeListener(e -> onGenerateClicked());
 		controlPanel.getColourComboBox().addActionListener(e -> onGenerateClicked());
 	}
 
@@ -119,8 +123,33 @@ public class LSystemController {
 			commandMap = TurtleCommand.PREDEFINED_COMMANDS;
 
 			String lSystemString = lSystem.generateLSystemString();
+			
+			System.out.println(lSystemString);			
+	        // Multiply angle by exponentially increasing factor per iteration:
+	        // iterations = 0 → baseAngle
+	        // iterations = 1 → baseAngle * factor
+	        // iterations = 2 → baseAngle * factor^2, etc.
+			double angleFactor = controlPanel.getAngleFactor();
+			double effectiveAngle = angle * Math.pow(angleFactor, Math.max(0, iterations - 1));
+			//double effectiveAngle = angle + iterations * angleFactor; // linearly (slower growth)
+			// "Toggling" growth
+			if (iterations % 2 == 0) { // toggle on even iterations
+				effectiveAngle *= -1;
+			}
+			
+			double stepFactor = controlPanel.getStepFactor();
+			double effectiveStep = step * Math.pow(stepFactor, Math.max(0, iterations - 1));
+			//double effectiveStep = step + iterations * stepFactor;
+			
+			double thicknessFactor = controlPanel.getThicknessFactor();
+			double effectiveThickness = thickness * Math.pow(thicknessFactor, Math.max(0, iterations - 1));
+			//double effectiveThickness = thickness + iterations * thicknessFactor;
+			
+			// Colour
+			Color effectiveColour = this.nextShade(colour, (float)controlPanel.getColourFactor());
 
-			updateDrawingPanel(angle, step, thickness, colour, commandMap, lSystemString);
+			updateDrawingPanel(effectiveAngle, effectiveStep, effectiveThickness, effectiveColour, commandMap, lSystemString);
+			//updateDrawingPanel(angle, step, thickness, colour, commandMap, lSystemString);
 
 		} catch (Exception e) {
 			showErrorDialog("Error generating L-System: " + e.getMessage());
@@ -130,7 +159,7 @@ public class LSystemController {
 	/**
 	 * Updates the drawing panel with new configuration and L-System string.
 	 */
-	private void updateDrawingPanel(double angle, int step, int thickness, Color colour, Map<Character, TurtleCommand> commandMap,
+	private void updateDrawingPanel(double angle, double step, double thickness, Color colour, Map<Character, TurtleCommand> commandMap,
 			String lSystemString) {
 		drawingPanel.setAngle(angle);
 		drawingPanel.setStep(step);
@@ -160,4 +189,26 @@ public class LSystemController {
 	private void showErrorDialog(String message) {
 		JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 	}
+	
+	/**
+	 * Helper method to get the next colour with gradient change controlled by factor
+	 * @param current
+	 * @param factor
+	 * @return
+	 */
+	private Color nextShade(Color current, float factor) {
+        // Convert RGB to HSB
+        float[] hsb = Color.RGBtoHSB(
+            current.getRed(),
+            current.getGreen(),
+            current.getBlue(),
+            null
+        );
+
+        // Increment hue by step (wrap around at 1.0)
+        float newHue = (hsb[0] + factor) % 1.0f;
+
+        // Create new color with same saturation & brightness
+        return Color.getHSBColor(newHue, hsb[1], hsb[2]);
+    }
 }
