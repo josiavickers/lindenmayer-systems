@@ -21,6 +21,7 @@ public class Turtle {
 	private Graphics g;
 	private State state;
 	private Stack<State> stateStack;
+	private Color currentColour = null;
 
 	public Turtle(Graphics g, int startX, int startY) {
 		this.g = g;
@@ -32,15 +33,51 @@ public class Turtle {
 		liftPen();
 	}
 
-	public void move(double step, double thickness, Color colour) {
-		Graphics2D g2 = (Graphics2D) this.g; // To accommodate stroke thickness
-		g2.setStroke(new BasicStroke((float)thickness));
+	public void move(double step, double thickness, Color colour, double stepFactor, double thicknessFactor, double colourFactor, int i) {
+	// A. MODULATE STEP LENGTH
 		
-		int dx = (int) (Math.cos(state.angle) * step);
-		int dy = (int) (Math.sin(state.angle) * step);
+		// 1. ORIGINAL:
+		//double effectiveStep = step;
+		
+		// 2. EXPONENTIAL CHANGE:
+		//double effectiveStep = step * Math.pow(stepFactor, Math.max(0, i - 1));
+		
+		// 3. LINEAR CHANGE:
+		double effectiveStep = step + i * stepFactor;
+		
+	// B. MODULATE STROKE THICKNESS
+		
+		// 1. ORIGINAL:
+		//double effectiveThickness = thickness;
+		
+		// 2. EXPONENTIAL CHANGE:
+		//double effectiveThickness = thickness * Math.pow(thicknessFactor, Math.max(0, i - 1));
+		
+		// 3. LINEAR CHANGE:
+		double effectiveThickness = thickness + i * thicknessFactor;
+		
+	// C. MODULATE COLOUR (Note Color class has useful methods like lighter(), darker() that could be considered too)
+		
+		// 1. ORIGINAL:
+		//Color effectiveColour = colour;
+		
+		// 2. NEXT SHADE IN COLOUR SPECTRUM (WORKS BEST WITH LOW NUMBER OF ITERATIONS SET)
+		if (this.currentColour == null) {
+			this.currentColour = colour;
+		} else {
+			this.currentColour = this.nextShade(this.currentColour, (float)colourFactor);
+		}
+		Color effectiveColour = this.currentColour;
+		
+		// Turtle Actions
+		Graphics2D g2 = (Graphics2D) this.g; // Cast to accommodate stroke thickness
+		g2.setStroke(new BasicStroke((float)effectiveThickness));
+		
+		int dx = (int) (Math.cos(state.angle) * effectiveStep);
+		int dy = (int) (Math.sin(state.angle) * effectiveStep);
 		dy = -dy;
 		if (state.pendown) {
-			g2.setColor(colour);
+			g2.setColor(effectiveColour);
 			g2.drawLine(state.x, state.y, state.x + dx, state.y + dy);
 		}
 		state.x += dx;
@@ -57,15 +94,35 @@ public class Turtle {
 	/**
 	 * turn to the left [degree]
 	 */
-	public void left(double angle) {
-		angle = angle * 2 * Math.PI / 360.0;
-		state.angle += angle;
+	public void left(double angle, double factor, int i) {
+		// MODULATE TURNING ANGLE
+		
+		// 1. ORIGINAL:
+		//double effectiveAngle = angle; 
+		
+		// 2. EXPONENTIAL ANGLE CHANGE
+        // Multiply angle by exponentially increasing factor per character iteration of the L System string:
+        // i = 0 → angle
+        // i = 1 → angle * factor
+        // i = 2 → angle * factor^2, etc.
+		//double effectiveAngle = angle * Math.pow(factor, Math.max(0, i - 1));
+		
+		// 3. LINEAR ANGLE CHANGE
+		double effectiveAngle = angle + i * factor;
+		
+		// OPTION: ANGLE TOGGLING
+//		if (i % 2 == 0) { // toggle on even iterations
+//			effectiveAngle *= -1;
+//		}
+		
+		effectiveAngle = effectiveAngle * 2 * Math.PI / 360.0;
+		state.angle += effectiveAngle;
 		if (state.angle >= 360.0)
 			state.angle -= 360.0;
 	}
 
-	public void right(double angle) {
-		left(-angle);
+	public void right(double angle, double factor, int i) {
+		left(-angle, factor, i);
 	}
 
 	/**
@@ -101,6 +158,34 @@ public class Turtle {
 		if (!stateStack.empty())
 			state = (State)stateStack.pop();
 	}
+	
+	/**
+	 * Helper method to get the next colour with gradient change controlled by factor
+	 * @param current
+	 * @param factor
+	 * @return next shade - Color
+	 */
+	private Color nextShade(Color current, float factor) {
+
+	    // Scale factor down for smoother colour transitions
+		if (factor > 0) 
+			factor *= 0.1f;
+		
+	    // Convert RGB to HSB
+	    float[] hsb = Color.RGBtoHSB(
+	        current.getRed(),
+	        current.getGreen(),
+	        current.getBlue(),
+	        null
+	    );
+
+	    // Increment hue by factor (wrap around at 1.0)
+	    float newHue = (hsb[0] + factor) % 1.0f;
+
+	    // Create new color with same saturation & brightness
+	    return Color.getHSBColor(newHue, hsb[1], hsb[2]);
+	}
+
 
 	public class State {
 		boolean pendown;

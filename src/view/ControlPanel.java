@@ -125,10 +125,10 @@ public class ControlPanel extends JPanel {
 		angleFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(angleFactorLabel, "split 2, alignx left");
 		angleFactorSpinner = new JSpinner();
-		angleFactorSpinner.setModel(new SpinnerNumberModel(1.0, 0.1, 2.0, 0.1));
+		angleFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 2.0, 0.001));
 		angleFactorSpinner.setToolTipText("Enter Factor");
 		angleFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(angleFactorSpinner, "wrap,gapy 0 10, alignx right");
+		add(angleFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
 
 		// Step Length spinner
 		JLabel stepLabel = new JLabel(" Step Length:       ");
@@ -145,10 +145,10 @@ public class ControlPanel extends JPanel {
 		stepFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(stepFactorLabel, "split 2, alignx left");
 		stepFactorSpinner = new JSpinner();
-		stepFactorSpinner.setModel(new SpinnerNumberModel(1.0, 0.1, 2.0, 0.1));
+		stepFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 2.0, 0.001));
 		stepFactorSpinner.setToolTipText("Enter Factor");
 		stepFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(stepFactorSpinner, "wrap,gapy 0 10, alignx right");
+		add(stepFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
 		
 		// Iteration Depth spinner
 		JLabel iterationLabel = new JLabel(" Iteration Depth: ");
@@ -176,10 +176,10 @@ public class ControlPanel extends JPanel {
 		thicknessFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(thicknessFactorLabel, "split 2, alignx left");
 		thicknessFactorSpinner = new JSpinner();
-		thicknessFactorSpinner.setModel(new SpinnerNumberModel(1.0, 0.1, 2.0, 0.1));
+		thicknessFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 2.0, 0.001));
 		thicknessFactorSpinner.setToolTipText("Enter Factor");
 		thicknessFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(thicknessFactorSpinner, "wrap,gapy 0 10, alignx right");
+		add(thicknessFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
 		
 		// Add drop down for colour
 		colourComboBox = new JComboBox<>(new Color[] {

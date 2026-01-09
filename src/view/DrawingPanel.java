@@ -38,6 +38,10 @@ public class DrawingPanel extends JPanel {
 	private double step;
 	private double thickness;
 	private Color colour;
+	private double angleFactor;
+	private double stepFactor;
+	private double thicknessFactor;
+	private double colourFactor;
 	private Map<Character, TurtleCommand> commandMap = new HashMap<>();
 
 	// View transformation parameters
@@ -83,10 +87,12 @@ public class DrawingPanel extends JPanel {
 		turtle.dropPen();
 
 		try {
+			int i = 0;
 			for (char ch : lSystemString.toCharArray()) {
 				TurtleCommand command = commandMap.get(ch);
 				try {
-					handleTurtleCommand(turtle, command); // COULD TRY ADDING GLOBAL VAR ITERATION
+					handleTurtleCommand(turtle, command, i); // COULD TRY ADDING GLOBAL VAR ITERATION
+					i++;
 					// GO TO METHOD FOR NEXT IDEA
 					// DEPENDING ON TYPE OF COMMAND, MODULATE ANGLE, STEP ETC TO VARYING DEGREES DEPENDING ON CURRENT ITERATION
 
@@ -118,19 +124,23 @@ public class DrawingPanel extends JPanel {
 	/**
 	 * Executes a turtle instruction based on the provided command.
 	 */
-	private void handleTurtleCommand(Turtle turtle, TurtleCommand command) {
+	private void handleTurtleCommand(Turtle turtle, TurtleCommand command, int i) {
 		switch (command) {
-		case MOVE -> turtle.move(step, thickness, colour);
-		case TURNRIGHT -> turtle.right(angle);
-		case TURNLEFT -> turtle.left(angle);
+		case MOVE -> turtle.move(step, thickness, colour, stepFactor, thicknessFactor, colourFactor, i);
+		case TURNRIGHT -> turtle.right(angle, angleFactor, i);
+		case TURNLEFT -> turtle.left(angle, angleFactor, i);
 		case PUSH -> turtle.push();
 		case POP -> turtle.pop();
 		}
 	}
 
 	// Setters for rendering parameters
-	public void setLSystemString(String lSystemString) {
+	public void setLSystemString(String lSystemString, double angleFactor, double stepFactor, double thicknessFactor, double colourFactor) {
 		this.lSystemString = lSystemString;
+		this.angleFactor = angleFactor;
+		this.stepFactor = stepFactor;
+		this.thicknessFactor = thicknessFactor;
+		this.colourFactor = colourFactor;
 		repaint();
 	}
 
