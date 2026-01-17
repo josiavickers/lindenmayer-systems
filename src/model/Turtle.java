@@ -45,6 +45,9 @@ public class Turtle {
 		// 3. LINEAR CHANGE:
 		double effectiveStep = step + i * stepFactor;
 		
+		// 4. Multiply by a (random) factor
+		//double effectiveStep = step * RandomUtil.getRandomInRange(1.0, 1.0);
+		
 	// B. MODULATE STROKE THICKNESS
 		
 		// 1. ORIGINAL:
@@ -55,6 +58,10 @@ public class Turtle {
 		
 		// 3. LINEAR CHANGE:
 		double effectiveThickness = thickness + i * thicknessFactor;
+		//double effectiveThickness = thickness*200 - i * thicknessFactor;
+		
+		// 4. Multiply by a (random) factor
+		//double effectiveThickness = thickness * RandomUtil.getRandomInRange(1.0, 10.0);
 		
 	// C. MODULATE COLOUR (Note Color class has useful methods like lighter(), darker() that could be considered too)
 		
@@ -109,6 +116,9 @@ public class Turtle {
 		
 		// 3. LINEAR ANGLE CHANGE
 		double effectiveAngle = angle + i * factor;
+		
+		// 4. Multiply by a (random) factor
+		//double effectiveAngle = angle * RandomUtil.getRandomInRange(1.0, 3.5);
 		
 		// OPTION: ANGLE TOGGLING
 //		if (i % 2 == 0) { // toggle on even iterations
