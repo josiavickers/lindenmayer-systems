@@ -33,7 +33,7 @@ public class Turtle {
 		liftPen();
 	}
 
-	public void move(double step, double thickness, Color colour, double stepFactor, double thicknessFactor, double colourFactor, int i) {
+	public void move(double step) {
 	// A. MODULATE STEP LENGTH
 		
 		// 1. ORIGINAL:
@@ -43,7 +43,7 @@ public class Turtle {
 		//double effectiveStep = step * Math.pow(stepFactor, Math.max(0, i - 1));
 		
 		// 3. LINEAR CHANGE:
-		double effectiveStep = step + i * stepFactor;
+		//double effectiveStep = step + i * stepFactor;
 		
 		// 4. Multiply by a (random) factor
 		//double effectiveStep = step * RandomUtil.getRandomInRange(1.0, 1.0);
@@ -57,7 +57,7 @@ public class Turtle {
 		//double effectiveThickness = thickness * Math.pow(thicknessFactor, Math.max(0, i - 1));
 		
 		// 3. LINEAR CHANGE:
-		double effectiveThickness = thickness + i * thicknessFactor;
+		//double effectiveThickness = thickness + i * thicknessFactor;
 		//double effectiveThickness = thickness*200 - i * thicknessFactor;
 		
 		// 4. Multiply by a (random) factor
@@ -69,22 +69,22 @@ public class Turtle {
 		//Color effectiveColour = colour;
 		
 		// 2. NEXT SHADE IN COLOUR SPECTRUM (WORKS BEST WITH LOW NUMBER OF ITERATIONS SET)
-		if (this.currentColour == null) {
-			this.currentColour = colour;
-		} else {
-			this.currentColour = this.nextShade(this.currentColour, (float)colourFactor);
-		}
-		Color effectiveColour = this.currentColour;
+//		if (this.currentColour == null) {
+//			this.currentColour = colour;
+//		} else {
+//			this.currentColour = this.nextShade(this.currentColour, (float)colourFactor);
+//		}
+//		Color effectiveColour = this.currentColour;
 		
 		// Turtle Actions
 		Graphics2D g2 = (Graphics2D) this.g; // Cast to accommodate stroke thickness
-		g2.setStroke(new BasicStroke((float)effectiveThickness));
+		//g2.setStroke(new BasicStroke((float)effectiveThickness));
 		
-		int dx = (int) (Math.cos(state.angle) * effectiveStep);
-		int dy = (int) (Math.sin(state.angle) * effectiveStep);
+		int dx = (int) (Math.cos(state.angle) * step);
+		int dy = (int) (Math.sin(state.angle) * step);
 		dy = -dy;
 		if (state.pendown) {
-			g2.setColor(effectiveColour);
+			//g2.setColor(effectiveColour);
 			g2.drawLine(state.x, state.y, state.x + dx, state.y + dy);
 		}
 		state.x += dx;
@@ -101,7 +101,7 @@ public class Turtle {
 	/**
 	 * turn to the left [degree]
 	 */
-	public void left(double angle, double factor, int i) {
+	public void left(double angle, double factor, double randomFactor, int i) {
 		// MODULATE TURNING ANGLE
 		
 		// 1. ORIGINAL:
@@ -118,7 +118,7 @@ public class Turtle {
 		double effectiveAngle = angle + i * factor;
 		
 		// 4. Multiply by a (random) factor
-		//double effectiveAngle = angle * RandomUtil.getRandomInRange(1.0, 3.5);
+		effectiveAngle = effectiveAngle * RandomUtil.getRandomInRange(1.0, randomFactor);
 		
 		// OPTION: ANGLE TOGGLING
 //		if (i % 2 == 0) { // toggle on even iterations
@@ -131,8 +131,8 @@ public class Turtle {
 			state.angle -= 360.0;
 	}
 
-	public void right(double angle, double factor, int i) {
-		left(-angle, factor, i);
+	public void right(double angle, double factor, double randomFactor, int i) {
+		left(-angle, factor, randomFactor, i);
 	}
 
 	/**

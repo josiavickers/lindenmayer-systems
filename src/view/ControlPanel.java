@@ -42,13 +42,14 @@ public class ControlPanel extends JPanel {
 	private JSpinner angleSpinner;
 	private JSpinner angleFactorSpinner;
 	private JSpinner stepSpinner;
-	private JSpinner stepFactorSpinner;
+	private JSpinner randomFactorSpinner;
+	//private JSpinner stepFactorSpinner;
 	private JSpinner iterationSpinner;
-	private JSpinner thicknessSpinner;
-	private JSpinner thicknessFactorSpinner;
-	private JSpinner colourFactorSpinner;
+	//private JSpinner thicknessSpinner;
+	//private JSpinner thicknessFactorSpinner;
+	//private JSpinner colourFactorSpinner;
 	private JComboBox<PredefinedLSystem> presetComboBox;
-	private JComboBox<Color> colourComboBox;
+	//private JComboBox<Color> colourComboBox;
 	private JTextArea rules;
 
 	
@@ -125,10 +126,20 @@ public class ControlPanel extends JPanel {
 		angleFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(angleFactorLabel, "split 2, alignx left");
 		angleFactorSpinner = new JSpinner();
-		angleFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 2.0, 0.001));
+		angleFactorSpinner.setModel(new SpinnerNumberModel(0.0, -1.0, 1.0, 0.001));
 		angleFactorSpinner.setToolTipText("Enter Factor");
 		angleFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(angleFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
+		
+		// Random Angle Factor Range Spinners
+		JLabel randomFactorMinLabel = new JLabel("Random Factor:     ");
+		randomFactorMinLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(randomFactorMinLabel, "split 2, alignx left");
+		randomFactorSpinner = new JSpinner();
+		randomFactorSpinner.setModel(new SpinnerNumberModel(1.0, 1.0, 5.0, 0.1));
+		randomFactorSpinner.setToolTipText("Enter Factor");
+		randomFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+		add(randomFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
 
 		// Step Length spinner
 		JLabel stepLabel = new JLabel(" Step Length:       ");
@@ -140,15 +151,15 @@ public class ControlPanel extends JPanel {
 		stepSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
 		add(stepSpinner, "wrap,gapy 0 10, alignx right");
 		
-		// Step Length Factor spinner
-		JLabel stepFactorLabel = new JLabel("Step Factor:     ");
-		stepFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(stepFactorLabel, "split 2, alignx left");
-		stepFactorSpinner = new JSpinner();
-		stepFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 2.0, 0.001));
-		stepFactorSpinner.setToolTipText("Enter Factor");
-		stepFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(stepFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
+//		// Step Length Factor spinner
+//		JLabel stepFactorLabel = new JLabel("Step Factor:     ");
+//		stepFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+//		add(stepFactorLabel, "split 2, alignx left");
+//		stepFactorSpinner = new JSpinner();
+//		stepFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 2.0, 0.001));
+//		stepFactorSpinner.setToolTipText("Enter Factor");
+//		stepFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+//		add(stepFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
 		
 		// Iteration Depth spinner
 		JLabel iterationLabel = new JLabel(" Iteration Depth: ");
@@ -162,81 +173,81 @@ public class ControlPanel extends JPanel {
 		add(iterationSpinner, "w 83, wrap,gapy 0 10, alignx right");
 		
 		// Thickness spinner
-		JLabel thicknessLabel = new JLabel(" Stroke Thickness: ");
-		thicknessLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(thicknessLabel, "split 2, alignx left");
-		thicknessSpinner = new JSpinner();
-		thicknessSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
-		thicknessSpinner.setToolTipText("Enter Stroke Thickness");
-		thicknessSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(thicknessSpinner, "w 83, wrap,gapy 0 10, alignx right");
-		
-		// Thickness Factor spinner
-		JLabel thicknessFactorLabel = new JLabel("Thickness Factor:     ");
-		thicknessFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(thicknessFactorLabel, "split 2, alignx left");
-		thicknessFactorSpinner = new JSpinner();
-		thicknessFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 2.0, 0.001));
-		thicknessFactorSpinner.setToolTipText("Enter Factor");
-		thicknessFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(thicknessFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
-		
-		// Add drop down for colour
-		colourComboBox = new JComboBox<>(new Color[] {
-			    Color.RED,
-			    Color.BLUE,
-			    Color.GREEN,
-			    Color.YELLOW,
-			    Color.BLACK,
-			    Color.WHITE,
-			    Color.ORANGE,
-			    Color.GRAY
-		});
-		
-		colourComboBox.setRenderer(new DefaultListCellRenderer() {
-			@Override
-			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-					boolean cellHasFocus) {
-		        if (value instanceof Color color) {
-		            setText(getColourName(color));
-		        } else {
-		            setText("");
-		        }
-				setHorizontalAlignment(CENTER);
-				setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
-				setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
-				return this;
-			}
-			
-		    private String getColourName(Color color) {
-		        if (Color.RED.equals(color))     return "Red";
-		        if (Color.BLUE.equals(color))    return "Blue";
-		        if (Color.GREEN.equals(color))   return "Green";
-		        if (Color.YELLOW.equals(color))  return "Yellow";
-		        if (Color.BLACK.equals(color))   return "Black";
-		        if (Color.WHITE.equals(color))   return "White";
-		        if (Color.ORANGE.equals(color))  return "Orange";
-		        if (Color.GRAY.equals(color))    return "Gray";
-
-		        // For unexpected colours
-		        return String.format("RGB(%d,%d,%d)", color.getRed(), color.getGreen(), color.getBlue());
-		    }
-		});
-		colourComboBox.setFont(new Font("Arial Black", Font.BOLD, 20));
-		JLabel colourBoxLabel = new JLabel("Colour:");
-		colourBoxLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(colourBoxLabel, "split 2, alignx left");
-		add(colourComboBox, "wrap,gapy 0 10, align right");
-		
-		// Thickness Factor spinner
-		JLabel colourFactorLabel = new JLabel("Colour Factor:     ");
-		colourFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(colourFactorLabel, "split 2, alignx left");
-		colourFactorSpinner = new JSpinner();
-		colourFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
-		colourFactorSpinner.setToolTipText("Enter Factor");
-		colourFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
-		add(colourFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
+//		JLabel thicknessLabel = new JLabel(" Stroke Thickness: ");
+//		thicknessLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+//		add(thicknessLabel, "split 2, alignx left");
+//		thicknessSpinner = new JSpinner();
+//		thicknessSpinner.setModel(new SpinnerNumberModel(1, 1, 10, 1));
+//		thicknessSpinner.setToolTipText("Enter Stroke Thickness");
+//		thicknessSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+//		add(thicknessSpinner, "w 83, wrap,gapy 0 10, alignx right");
+//		
+//		// Thickness Factor spinner
+//		JLabel thicknessFactorLabel = new JLabel("Thickness Factor:     ");
+//		thicknessFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+//		add(thicknessFactorLabel, "split 2, alignx left");
+//		thicknessFactorSpinner = new JSpinner();
+//		thicknessFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 2.0, 0.001));
+//		thicknessFactorSpinner.setToolTipText("Enter Factor");
+//		thicknessFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+//		add(thicknessFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
+//		
+//		// Add drop down for colour
+//		colourComboBox = new JComboBox<>(new Color[] {
+//			    Color.RED,
+//			    Color.BLUE,
+//			    Color.GREEN,
+//			    Color.YELLOW,
+//			    Color.BLACK,
+//			    Color.WHITE,
+//			    Color.ORANGE,
+//			    Color.GRAY
+//		});
+//
+//		colourComboBox.setRenderer(new DefaultListCellRenderer() {
+//			@Override
+//			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+//					boolean cellHasFocus) {
+//		        if (value instanceof Color color) {
+//		            setText(getColourName(color));
+//		        } else {
+//		            setText("");
+//		        }
+//				setHorizontalAlignment(CENTER);
+//				setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
+//				setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
+//				return this;
+//			}
+//			
+//		    private String getColourName(Color color) {
+//		        if (Color.RED.equals(color))     return "Red";
+//		        if (Color.BLUE.equals(color))    return "Blue";
+//		        if (Color.GREEN.equals(color))   return "Green";
+//		        if (Color.YELLOW.equals(color))  return "Yellow";
+//		        if (Color.BLACK.equals(color))   return "Black";
+//		        if (Color.WHITE.equals(color))   return "White";
+//		        if (Color.ORANGE.equals(color))  return "Orange";
+//		        if (Color.GRAY.equals(color))    return "Gray";
+//
+//		        // For unexpected colours
+//		        return String.format("RGB(%d,%d,%d)", color.getRed(), color.getGreen(), color.getBlue());
+//		    }
+//		});
+//		colourComboBox.setFont(new Font("Arial Black", Font.BOLD, 20));
+//		JLabel colourBoxLabel = new JLabel("Colour:");
+//		colourBoxLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+//		add(colourBoxLabel, "split 2, alignx left");
+//		add(colourComboBox, "wrap,gapy 0 10, align right");
+//		
+//		// Thickness Factor spinner
+//		JLabel colourFactorLabel = new JLabel("Colour Factor:     ");
+//		colourFactorLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+//		add(colourFactorLabel, "split 2, alignx left");
+//		colourFactorSpinner = new JSpinner();
+//		colourFactorSpinner.setModel(new SpinnerNumberModel(0.0, 0.0, 1.0, 0.01));
+//		colourFactorSpinner.setToolTipText("Enter Factor");
+//		colourFactorSpinner.setFont(new Font("Arial Black", Font.BOLD, 20));
+//		add(colourFactorSpinner, "w 83, wrap,gapy 0 10, alignx right");
 	}
 
 	// Getters
@@ -263,6 +274,14 @@ public class ControlPanel extends JPanel {
 	public double getAngleFactor() {
 		return (double) angleFactorSpinner.getValue();
 	}
+	
+	public JSpinner getRandomFactorSpinner() {
+		return randomFactorSpinner;
+	}
+	
+	public double getRandomFactor() {
+		return (double) randomFactorSpinner.getValue();
+	}
 
 	public JSpinner getStepSpinner() {
 		return stepSpinner;
@@ -272,41 +291,41 @@ public class ControlPanel extends JPanel {
 		return (int) stepSpinner.getValue();
 	}
 	
-	public JSpinner getStepFactorSpinner() {
-		return stepFactorSpinner;
-	}
-
-	public double getStepFactor() {
-		return (double) stepFactorSpinner.getValue();
-	}
+//	public JSpinner getStepFactorSpinner() {
+//		return stepFactorSpinner;
+//	}
+//
+//	public double getStepFactor() {
+//		return (double) stepFactorSpinner.getValue();
+//	}
 
 	public JSpinner getIterationSpinner() {
 		return iterationSpinner;
 	}
 	
-	public JSpinner getThicknessSpinner() {
-		return thicknessSpinner;
-	}
-	
-	public int getThickness() {
-		return (int) thicknessSpinner.getValue();
-	}
-	
-	public JSpinner getThicknessFactorSpinner() {
-		return thicknessFactorSpinner;
-	}
+//	public JSpinner getThicknessSpinner() {
+//		return thicknessSpinner;
+//	}
+//	
+//	public int getThickness() {
+//		return (int) thicknessSpinner.getValue();
+//	}
+//	
+//	public JSpinner getThicknessFactorSpinner() {
+//		return thicknessFactorSpinner;
+//	}
 
-	public double getThicknessFactor() {
-		return (double) thicknessFactorSpinner.getValue();
-	}
-	
-	public JSpinner getColourFactorSpinner() {
-		return colourFactorSpinner;
-	}
-
-	public double getColourFactor() {
-		return (double) colourFactorSpinner.getValue();
-	}
+//	public double getThicknessFactor() {
+//		return (double) thicknessFactorSpinner.getValue();
+//	}
+//	
+//	public JSpinner getColourFactorSpinner() {
+//		return colourFactorSpinner;
+//	}
+//
+//	public double getColourFactor() {
+//		return (double) colourFactorSpinner.getValue();
+//	}
 
 	public int getIteration() {
 		return (int) iterationSpinner.getValue();
@@ -316,13 +335,13 @@ public class ControlPanel extends JPanel {
 		return (PredefinedLSystem) presetComboBox.getSelectedItem();
 	}
 	
-	public JComboBox<Color> getColourComboBox() {
-		return colourComboBox;
-	}
-	
-	public Color getColour() {
-		return (Color) colourComboBox.getSelectedItem();
-	}
+//	public JComboBox<Color> getColourComboBox() {
+//		return colourComboBox;
+//	}
+//	
+//	public Color getColour() {
+//		return (Color) colourComboBox.getSelectedItem();
+//	}
 
 	// Setters
 	public void setAxiom(String str) {
@@ -340,30 +359,34 @@ public class ControlPanel extends JPanel {
 	public void setAngleFactor(double deg) {
 		angleFactorSpinner.setValue(deg);
 	}
+	
+	public void setRandomFactor(double factor) {
+		randomFactorSpinner.setValue(factor);
+	}
 
 	public void setIterations(int iterations) {
 		iterationSpinner.setValue(iterations);
 	}
 	
-	public void setThickness(int thickness) {
-		thicknessSpinner.setValue(thickness);
-	}
-	
-	public void setThicknessFactor(double deg) {
-		thicknessFactorSpinner.setValue(deg);
-	}
+//	public void setThickness(int thickness) {
+//		thicknessSpinner.setValue(thickness);
+//	}
+//	
+//	public void setThicknessFactor(double deg) {
+//		thicknessFactorSpinner.setValue(deg);
+//	}
 
 	public void setStep(int length) {
 		stepSpinner.setValue(length);
 	}
 	
-	public void setStepFactor(double deg) {
-		stepFactorSpinner.setValue(deg);
-	}
-	
-	public void setColour(Color colour) {
-		colourComboBox.setSelectedItem(colour);
-	}
+//	public void setStepFactor(double deg) {
+//		stepFactorSpinner.setValue(deg);
+//	}
+//	
+//	public void setColour(Color colour) {
+//		colourComboBox.setSelectedItem(colour);
+//	}
 
 	public void setSelectedPreset(PredefinedLSystem preset) {
 		presetComboBox.setSelectedItem(preset);

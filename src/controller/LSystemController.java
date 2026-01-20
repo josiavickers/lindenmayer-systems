@@ -62,11 +62,12 @@ public class LSystemController {
 		controlPanel.getAngleSpinner().addChangeListener(e -> onGenerateClicked());
 		controlPanel.getAngleFactorSpinner().addChangeListener(e -> onGenerateClicked());
 		controlPanel.getStepSpinner().addChangeListener(e -> onGenerateClicked());
-		controlPanel.getStepFactorSpinner().addChangeListener(e -> onGenerateClicked());
-		controlPanel.getThicknessSpinner().addChangeListener(e -> onGenerateClicked());
-		controlPanel.getThicknessFactorSpinner().addChangeListener(e -> onGenerateClicked());
-		controlPanel.getColourFactorSpinner().addChangeListener(e -> onGenerateClicked());
-		controlPanel.getColourComboBox().addActionListener(e -> onGenerateClicked());
+		controlPanel.getRandomFactorSpinner().addChangeListener(e -> onGenerateClicked());
+//		controlPanel.getStepFactorSpinner().addChangeListener(e -> onGenerateClicked());
+//		controlPanel.getThicknessSpinner().addChangeListener(e -> onGenerateClicked());
+//		controlPanel.getThicknessFactorSpinner().addChangeListener(e -> onGenerateClicked());
+//		controlPanel.getColourFactorSpinner().addChangeListener(e -> onGenerateClicked());
+//		controlPanel.getColourComboBox().addActionListener(e -> onGenerateClicked());
 	}
 
 	/**
@@ -78,7 +79,7 @@ public class LSystemController {
 			PredefinedLSystem preset = controlPanel.getSelectedPreset();
 
 			setInputsWithPresetValue(preset.getAxiom(), preset.getRules(), preset.getAngle(), preset.getStep(),
-					preset.getIterations(), preset.getThickness(), preset.getColour());
+					preset.getIterations());
 
 			generateAndDraw(preset);
 		} catch (Exception e) {
@@ -110,8 +111,8 @@ public class LSystemController {
 			String rules = preset != null ? preset.getRules() : controlPanel.getRules();
 			double angle = preset != null ? preset.getAngle() : controlPanel.getAngle();
 			int step = preset != null ? preset.getStep() : controlPanel.getStep();
-			int thickness = preset != null ? preset.getThickness() : controlPanel.getThickness();
-			Color colour = preset != null ? preset.getColour() : controlPanel.getColour();
+//			int thickness = preset != null ? preset.getThickness() : controlPanel.getThickness();
+//			Color colour = preset != null ? preset.getColour() : controlPanel.getColour();
 			int iterations = preset != null ? preset.getIterations() : controlPanel.getIteration();
 
 			// Generate L-System string
@@ -126,7 +127,7 @@ public class LSystemController {
 			
 			System.out.println(lSystemString);			
 
-			updateDrawingPanel(angle, controlPanel.getAngleFactor(), step, controlPanel.getStepFactor(), thickness, controlPanel.getThicknessFactor(), colour, controlPanel.getColourFactor(), commandMap, lSystemString);
+			updateDrawingPanel(angle, controlPanel.getAngleFactor(), controlPanel.getRandomFactor(), step, commandMap, lSystemString);
 
 		} catch (Exception e) {
 			showErrorDialog("Error generating L-System: " + e.getMessage());
@@ -136,27 +137,26 @@ public class LSystemController {
 	/**
 	 * Updates the drawing panel with new configuration and L-System string.
 	 */
-	private void updateDrawingPanel(double angle, double angleFactor, double step, double stepFactor, double thickness, double thicknessFactor, Color colour, double colourFactor,  Map<Character, TurtleCommand> commandMap,
-			String lSystemString) {
+	private void updateDrawingPanel(double angle, double angleFactor, double randomFactor, double step,  Map<Character, TurtleCommand> commandMap, String lSystemString) {
 		drawingPanel.setAngle(angle);
 		drawingPanel.setStep(step);
-		drawingPanel.setThickness(thickness);
-		drawingPanel.setColour(colour);
+//		drawingPanel.setThickness(thickness);
+//		drawingPanel.setColour(colour);
 		drawingPanel.setCommandMap(commandMap);
-		drawingPanel.setLSystemString(lSystemString, angleFactor, stepFactor, thicknessFactor, colourFactor);
+		drawingPanel.setLSystemString(lSystemString, angleFactor, randomFactor);
 	}
 
 	/**
 	 * Sets input fields in the control panel using the selected predefined
 	 * L-system.
 	 */
-	private void setInputsWithPresetValue(String axiom, String rules, double angle, int step, int iterations, int thickness, Color colour) {
+	private void setInputsWithPresetValue(String axiom, String rules, double angle, int step, int iterations) {
 		controlPanel.setAxiom(axiom);
 		controlPanel.setRules(rules);
 		controlPanel.setAngle(angle);
 		controlPanel.setStep(step);
-		controlPanel.setThickness(thickness);
-		controlPanel.setColour(colour);
+//		controlPanel.setThickness(thickness);
+//		controlPanel.setColour(colour);
 		controlPanel.setIterations(iterations);
 	}
 

@@ -36,12 +36,13 @@ public class DrawingPanel extends JPanel {
 	private String lSystemString;
 	private double angle;
 	private double step;
-	private double thickness;
-	private Color colour;
+	//private double thickness;
+	//private Color colour;
 	private double angleFactor;
-	private double stepFactor;
-	private double thicknessFactor;
-	private double colourFactor;
+	private double randomFactor;
+	//private double stepFactor;
+	//private double thicknessFactor;
+	//private double colourFactor;
 	private Map<Character, TurtleCommand> commandMap = new HashMap<>();
 
 	// View transformation parameters
@@ -91,11 +92,8 @@ public class DrawingPanel extends JPanel {
 			for (char ch : lSystemString.toCharArray()) {
 				TurtleCommand command = commandMap.get(ch);
 				try {
-					handleTurtleCommand(turtle, command, i); // COULD TRY ADDING GLOBAL VAR ITERATION
+					handleTurtleCommand(turtle, command, i); 
 					i++;
-					// GO TO METHOD FOR NEXT IDEA
-					// DEPENDING ON TYPE OF COMMAND, MODULATE ANGLE, STEP ETC TO VARYING DEGREES DEPENDING ON CURRENT ITERATION
-
 				} catch (Exception e) {
 					showErrorDialog("No command provided for character: '" + ch + "'");
 					return;
@@ -126,21 +124,22 @@ public class DrawingPanel extends JPanel {
 	 */
 	private void handleTurtleCommand(Turtle turtle, TurtleCommand command, int i) {
 		switch (command) {
-		case MOVE -> turtle.move(step, thickness, colour, stepFactor, thicknessFactor, colourFactor, i);
-		case TURNRIGHT -> turtle.right(angle, angleFactor, i);
-		case TURNLEFT -> turtle.left(angle, angleFactor, i);
+		case MOVE -> turtle.move(step);
+		case TURNRIGHT -> turtle.right(angle, angleFactor, randomFactor, i);
+		case TURNLEFT -> turtle.left(angle, angleFactor, randomFactor, i);
 		case PUSH -> turtle.push();
 		case POP -> turtle.pop();
 		}
 	}
 
 	// Setters for rendering parameters
-	public void setLSystemString(String lSystemString, double angleFactor, double stepFactor, double thicknessFactor, double colourFactor) {
+	public void setLSystemString(String lSystemString, double angleFactor, double randomFactor) {
 		this.lSystemString = lSystemString;
 		this.angleFactor = angleFactor;
-		this.stepFactor = stepFactor;
-		this.thicknessFactor = thicknessFactor;
-		this.colourFactor = colourFactor;
+		this.randomFactor = randomFactor;
+		//this.stepFactor = stepFactor;
+		//this.thicknessFactor = thicknessFactor;
+		//this.colourFactor = colourFactor;
 		repaint();
 	}
 
@@ -152,13 +151,13 @@ public class DrawingPanel extends JPanel {
 		this.step = step;
 	}
 	
-	public void setThickness(double thickness) {
-		this.thickness = thickness;
-	}
-	
-	public void setColour(Color colour) {
-		this.colour = colour;
-	}
+//	public void setThickness(double thickness) {
+//		this.thickness = thickness;
+//	}
+//	
+//	public void setColour(Color colour) {
+//		this.colour = colour;
+//	}
 
 	public void setCommandMap(Map<Character, TurtleCommand> commandMap) {
 		this.commandMap = commandMap;
